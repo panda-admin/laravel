@@ -2,12 +2,12 @@
 
 $attributes = [
     'prefix' => config('panda-admin.config.prefix'),
-    'namespace' => 'PandaAdmin\\Core\\Controllers'
+    'middleware' => config('panda-admin.config.middleware'),
+    'namespace' => 'PandaAdmin\\Laravel\\Controllers',
 ];
 
 Route::group($attributes, function() {
     Route::get('/', 'AdminController@index');
-
     Route::get('/contenttypes', 'ContentTypeController@index');
     Route::get('/contenttypes/{type}', 'ContentTypeController@show');
 

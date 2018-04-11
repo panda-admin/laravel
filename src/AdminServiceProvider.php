@@ -1,14 +1,8 @@
 <?php
 
-namespace PandaAdmin\Core;
+namespace PandaAdmin\Laravel;
 
-
-use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use PandaAdmin\Core\Config\Config;
-use PandaAdmin\Core\Content\Form\FormBuilder;
-use PandaAdmin\Core\Content\Fields\FieldMap;
-use Symfony\Component\Yaml\Yaml;
 
 class AdminServiceProvider extends ServiceProvider
 {

@@ -2,4 +2,5 @@
 
 return [
     'prefix' => 'admin',
+    'middleware' => ['web']
 ];

@@ -1,6 +1,6 @@
 <?php
 
-namespace PandaAdmin\Core\Controllers;
+namespace PandaAdmin\Laravel\Controllers;
 
 
 use Illuminate\Http\JsonResponse;
