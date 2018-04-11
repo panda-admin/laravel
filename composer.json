@@ -1,0 +1,24 @@
+{
+    "name": "panda-admin/laravel",
+    "license": "MIT",
+    "require": {
+        "laravel/framework": "^5.6",
+        "symfony/yaml": "^4.0",
+        "panda-admin/core": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "PandaAdmin\\Laravel\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PandaAdmin\\Laravel\\AdminServiceProvider"
+            ],
+            "facades": {
+                "Yaml": "Symfony\\Component\\Yaml\\Yaml"
+            }
+        }
+    }
+}
