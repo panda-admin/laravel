@@ -8,6 +8,10 @@ use PandaAdmin\Core\Config\Config;
 use PandaAdmin\Core\Config\ConfigInterface;
 use PandaAdmin\Core\Content\ContentTypeFactory;
 use PandaAdmin\Core\Content\ContentTypeFactoryInterface;
+use PandaAdmin\Core\Form\Fields\FieldFactory;
+use PandaAdmin\Core\Form\Fields\FieldFactoryInterface;
+use PandaAdmin\Core\Form\Fields\FieldMap;
+use PandaAdmin\Core\Form\Fields\FieldMapInterface;
 use PandaAdmin\Core\Form\FormFactory;
 use PandaAdmin\Core\Form\FormFactoryInterface;
 
@@ -31,11 +35,22 @@ class AdminServiceProvider extends ServiceProvider
             return new ContentTypeFactory($config);
         });
 
+        $this->app->bind(FieldMapInterface::class, function(Application $app) {
+            return new FieldMap();
+        });
+
+        $this->app->bind(FieldFactoryInterface::class, function(Application $app) {
+            $fieldMap = $app->make(FieldMapInterface::class);
+
+            return new FieldFactory($fieldMap);
+        });
+
         $this->app->bind(FormFactoryInterface::class, function(Application $app) {
             /** @var ContentTypeFactoryInterface $ctFactory */
             $ctFactory = $app->make(ContentTypeFactoryInterface::class);
+            $fieldFactory = $app->make(FieldFactoryInterface::class);
 
-            return new FormFactory($ctFactory);
+            return new FormFactory($ctFactory, $fieldFactory);
         });
     }
 

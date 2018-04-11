@@ -6,57 +6,38 @@ namespace PandaAdmin\Laravel\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use PandaAdmin\Core\Content\ContentTypeFactoryInterface;
 use PandaAdmin\Core\Content\Form\FormBuilder;
+use PandaAdmin\Core\Form\FormFactoryInterface;
 
 class ContentController extends Controller
 {
-    protected $contenttype;
+    protected $contentType;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, ContentTypeFactoryInterface $factory)
     {
-        $this->contenttype = $request->route('contenttype');
+        if($request->route('content')) {
+            $this->contentType = $factory->make($request->route('content'));
+        }
     }
 
     public function index()
     {
-        return new JsonResponse([
-            [
-                'title' => 'Some title',
-                'content' => '<p>HTML Content!</p>',
-                'cover' => 'content/some-image.png'
-            ],
-            [
-                'title' => 'Some title 2',
-                'content' => '<p>HTML Content!</p>',
-                'cover' => 'content/some-image.png'
-            ],
-            [
-                'title' => 'Some title 3',
-                'content' => '<p>HTML Content!</p>',
-                'cover' => 'content/some-image.png'
-            ],
-        ]);
+
     }
 
-    public function create(FormBuilder $builder)
+    public function create(FormFactoryInterface $factory)
     {
-        dump($builder->build([
-            [
-                'type' => 'text'
-            ]
-        ]));
-        $contenttype = [
-            'contenttype' => 'testtype',
-            'fields' => [
-                'name' => 'asdad',
-                'type' => 'text',
-                'component' => 'text-component',
-                'value' => 'asdas',
-                'label' => 'Asdad',
-            ],
-        ];
+        $modelClass = $this->contentType->getOptions()['model'];
 
-        return new JsonResponse($contenttype);
+        /** @var \PandaAdmin\Laravel\BaseModel $cr */
+        $cr = new $modelClass;
+
+        $cr->title = 'asd';
+
+        $form = $factory->make($this->contentType->getName(), $cr);
+
+        return new JsonResponse($form);
     }
 
     public function store()
@@ -64,22 +45,22 @@ class ContentController extends Controller
 
     }
 
-    public function show()
+    public function show($id)
     {
 
     }
 
-    public function update()
+    public function update($id)
     {
 
     }
 
-    public function destroy()
+    public function destroy($id)
     {
 
     }
 
-    public function edit()
+    public function edit($id)
     {
 
     }
