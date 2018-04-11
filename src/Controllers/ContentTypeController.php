@@ -25,9 +25,9 @@ class ContentTypeController extends Controller
 
     }
 
-    public function show($type, ContentTypeFactory $factory)
+    public function show($type)
     {
-        return new JsonResponse($factory->build($type)->getFormDefinition());
+
     }
 
     public function update()
