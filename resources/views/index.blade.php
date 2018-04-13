@@ -8,6 +8,8 @@
     <title>Panda Admin</title>
 </head>
 <body>
-<!-- VUE COMPONENT -->
+<div id="admin">
+    <app routes="{{ json_encode($routes) }}"></app>
+</div>
 </body>
 </html>

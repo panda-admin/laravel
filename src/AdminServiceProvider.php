@@ -3,6 +3,8 @@
 namespace PandaAdmin\Laravel;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Routing\Route;
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use PandaAdmin\Core\Config\Config;
 use PandaAdmin\Core\Config\ConfigInterface;
@@ -21,9 +23,27 @@ class AdminServiceProvider extends ServiceProvider
      * Register bindings in the container
      *
      * @return void
+     * @throws \InvalidArgumentException
      */
     public function register()
     {
+        $this->app->singleton('admin.routes', function(Application $app) {
+            /** @var Router $router */
+            $router = $app->make(Router::class);
+
+            $routes = $router->getRoutes()->getRoutesByName();
+
+            $result = [];
+
+            foreach ($routes as $name => $route) {
+                /** @var Route $route */
+
+                $result[$name] = $route->uri();
+            }
+
+            return $result;
+        });
+
         $this->app->singleton(ConfigInterface::class, function(Application $app) {
             return new Config(config('panda-admin.contenttypes'));
         });
