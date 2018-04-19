@@ -9,33 +9,32 @@ use Illuminate\Routing\Controller;
 use PandaAdmin\Core\Content\ContentTypeFactoryInterface;
 use PandaAdmin\Core\Content\Form\FormBuilder;
 use PandaAdmin\Core\Form\FormFactoryInterface;
+use PandaAdmin\Core\Storage\EntityManagerInterface;
 
 class ContentController extends Controller
 {
     protected $contentType;
 
-    public function __construct(Request $request, ContentTypeFactoryInterface $factory)
+    protected $repo;
+
+    public function __construct(Request $request, ContentTypeFactoryInterface $factory, EntityManagerInterface $manager)
     {
-        if($request->route('content')) {
-            $this->contentType = $factory->make($request->route('content'));
+        $contentType = $request->route('content');
+
+        if($contentType) {
+            $this->contentType = $factory->make($contentType);
+            $this->repo = $manager->getRepository($contentType);
         }
     }
 
     public function index()
     {
-
+        return new JsonResponse($this->repo->findAll());
     }
 
     public function create(FormFactoryInterface $factory)
     {
-        $modelClass = $this->contentType->getOptions()['model'];
-
-        /** @var \PandaAdmin\Laravel\BaseModel $cr */
-        $cr = new $modelClass;
-
-        $cr->title = 'asd';
-
-        $form = $factory->make($this->contentType->getName(), $cr);
+        $form = $factory->make($this->contentType->getName());
 
         return new JsonResponse($form);
     }
@@ -45,23 +44,33 @@ class ContentController extends Controller
 
     }
 
-    public function show($id)
+    public function show($content, $id)
+    {
+        $contentRecord = $this->repo->find($id);
+
+        if(!$contentRecord) {
+            return new JsonResponse(null, JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        return new JsonResponse($contentRecord);
+    }
+
+    public function update($content, $id)
     {
 
     }
 
-    public function update($id)
+    public function destroy($content, $id)
     {
 
     }
 
-    public function destroy($id)
+    public function edit($content, $id, FormFactoryInterface $factory)
     {
+        $cr = $this->repo->find($id);
 
-    }
+        $form = $factory->make($this->contentType->getName(), $cr);
 
-    public function edit($id)
-    {
-
+        return new JsonResponse($form);
     }
 }

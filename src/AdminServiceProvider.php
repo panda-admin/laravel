@@ -16,6 +16,8 @@ use PandaAdmin\Core\Form\Fields\FieldMap;
 use PandaAdmin\Core\Form\Fields\FieldMapInterface;
 use PandaAdmin\Core\Form\FormFactory;
 use PandaAdmin\Core\Form\FormFactoryInterface;
+use PandaAdmin\Core\Storage\EntityManagerInterface;
+use PandaAdmin\Laravel\Storage\EntityManager;
 
 class AdminServiceProvider extends ServiceProvider
 {
@@ -71,6 +73,10 @@ class AdminServiceProvider extends ServiceProvider
             $fieldFactory = $app->make(FieldFactoryInterface::class);
 
             return new FormFactory($ctFactory, $fieldFactory);
+        });
+
+        $this->app->bind(EntityManagerInterface::class, function(Application $app) {
+            return new EntityManager($app->make(ConfigInterface::class));
         });
     }
 
